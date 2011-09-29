@@ -20,18 +20,18 @@ I created a 'home' environment for testing without ldap connectivity.
     c.require_password_confirmation = false
     unless Rails.env.home? || Rails.env.test?
       c.validate_ldap_login = false	 
-	else
-	  c.login_field = :ldap_login
-	end
+    else
+      c.login_field = :ldap_login
     end
+  end
   #swift bypass for non ldap auth testing
-    def bypass?(password)
-      if password == "qwertyuiop"
-	return true
-      else
-	return false
-      end
+  def bypass?(password)
+    if password == "qwertyuiop"
+      return true
+    else
+      return false
     end
+  end
 -----------
 === app/models/user_session.rb
 
