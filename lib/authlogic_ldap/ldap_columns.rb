@@ -44,7 +44,7 @@ module AuthlogicLdap
 				record.phone = "#{entry.telephonenumber}"
 				record.email =  "#{entry.mail}"
 				record.displayname = "#{entry.displayname}"
-				record.initials = "#{entry.initials}"
+				#record.initials = "#{entry.initials}"
 					end
 				end
 				

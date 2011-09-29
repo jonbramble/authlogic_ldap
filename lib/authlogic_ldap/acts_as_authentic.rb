@@ -12,8 +12,8 @@ module AuthlogicLdap
 
 		module Config
 			 
-			 def validate_ldap_login(value = nil)				#set this in acts as auth block in user
-        			rw_config(:validate_ldap_login, value, true)		#adds it to something				
+			 def validate_ldap_login(value = nil)			#set this in acts as auth block in user
+        			rw_config(:validate_ldap_login, value, true)		
       			 end
       			 alias_method :validate_ldap_login=, :validate_ldap_login	
 
@@ -52,12 +52,11 @@ module AuthlogicLdap
           			#ldap.port = session_class.ldap_port
           			#ldap.auth ldap_login, ldap_password
           			#errors.add_to_base(ldap.get_operation_result.message) if !ldap.bind
-				#return true
+				return true
         		end
         private
         		def validate_ldap?
-          			#ldap_login_changed? && !ldap_login.blank?
-				return true
+          			return ldap_login_changed? && !ldap_login.blank?
         		end
 
 		end

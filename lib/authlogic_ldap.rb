@@ -3,7 +3,6 @@
 puts "AuthlogicLdap"
 
 require 'net/ldap'
-
 require "authlogic_ldap/acts_as_authentic"
 require "authlogic_ldap/session"
 require "authlogic_ldap/ldap_columns"
