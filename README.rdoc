@@ -2,10 +2,9 @@ Basic operational state with authlogic 3.0.2
 Only in testing phase at present. ldap columns not working well due to a mess on the ldap server side. 
 I created a 'home' environment for testing without ldap connectivity.
 
- = authlogic_ldap
+= authlogic_ldap
 -----------
-  #part of schema
-
+== part of schema
   create_table "users", :force => true do |t|
       t.string   "persistence_token"
       t.string   "ldap_login"
@@ -13,20 +12,18 @@ I created a 'home' environment for testing without ldap connectivity.
       t.datetime "updated_at"
   end
 -----------
- #app/models/user.rb
+== app/models/user.rb
 
   acts_as_authentic do |c|
     c.validate_password_field = false	
     c.validate_email_field = false
     c.require_password_confirmation = false
-	
     unless Rails.env.home? || Rails.env.test?
       c.validate_ldap_login = false	 
 	else
 	  c.login_field = :ldap_login
 	end
     end
-
   #swift bypass for non ldap auth testing
     def bypass?(password)
       if password == "qwertyuiop"
@@ -36,52 +33,43 @@ I created a 'home' environment for testing without ldap connectivity.
       end
     end
 -----------
-####app/models/user_session.rb
+== app/models/user_session.rb
 
-class UserSession < Authlogic::Session::Base
-
-	if Rails.env.home? || Rails.env.test?
-		login_field = "ldap_login"
-		verify_password_method :bypass?
-	else
-
-	login_field = "ldap_login"
-	password_field = "ldap_password"
-
-	ldap_host Settings.ldap.host
-	ldap_port Settings.ldap.port
-	ldap_base Settings.ldap.base
-	ldap_user_dn Settings.ldap.user_dn
-
-	self.find_by_ldap_login_method :find_by_ldap_login
-	
-	#this should make a new record if there isn't one
-	#self.find_by_ldap_login_method :find_or_create_by_ldap_login
-
-	end
-end
-
+  class UserSession < Authlogic::Session::Base
+    if Rails.env.home? || Rails.env.test?
+      login_field = "ldap_login"
+      verify_password_method :bypass?
+    else
+      login_field = "ldap_login"
+      password_field = "ldap_password"
+      ldap_host Settings.ldap.host
+      ldap_port Settings.ldap.port
+      ldap_base Settings.ldap.base
+      ldap_user_dn Settings.ldap.user_dn
+      self.find_by_ldap_login_method :find_by_ldap_login	
+      #this should make a new record if there isn't one
+      #self.find_by_ldap_login_method :find_or_create_by_ldap_login
+    end
+  end
 -----------
-####app/models/settings.rb  requires settingslogic,  https://github.com/binarylogic/settingslogic 
+== app/models/settings.rb  requires settingslogic,  https://github.com/binarylogic/settingslogic 
 
-	class Settings < Settingslogic
-		source "#{Rails.root}/config/application.yml"
-		namespace Rails.env
-	end
-
+  class Settings < Settingslogic
+    source "#{Rails.root}/config/application.yml"
+      namespace Rails.env
+  end
 -----------
-####config/application.yml  The user_dn for the server i use is of the form user_name@ldapservername
+==config/application.yml  The user_dn for the server i use is of the form user_name@ldapservername
 
-	defaults: &defaults
-  	  ldap:
-   	    host: 'ldapservername'
-   	    port: ''
-   	    base: 'dc=ds....'
-      	    user_dn: '@ldapservername'  
-   	    loginfilter: 'cn'
-
-	development:
-  	  <<: *defaults
+  defaults: &defaults
+    ldap:
+      host: 'ldapservername'
+      port: ''
+      base: 'dc=ds....'
+      user_dn: '@ldapservername'  
+     loginfilter: 'cn'
+  development:
+    <<: *defaults
 -----------
 
 
