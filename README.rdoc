@@ -4,14 +4,13 @@ I created a 'home' environment for testing without ldap connectivity.
 
 -----------
 #part of schema
-```ruby
+
 create_table "users", :force => true do |t|
 	t.string   "persistence_token"
     	t.string   "ldap_login"
     	t.datetime "created_at"
     	t.datetime "updated_at"
 end
-```
 -----------
 #app/models/user.rb
 
