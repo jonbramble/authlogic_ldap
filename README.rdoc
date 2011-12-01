@@ -1,4 +1,4 @@
-Basic operational state with authlogic 3.0.2
+Basic operational state with authlogic 3.1.0
 Only in testing phase at present. ldap columns not working well due to a mess on the ldap server side. 
 I created a 'home' environment for testing without ldap connectivity.
 
@@ -70,6 +70,43 @@ I created a 'home' environment for testing without ldap connectivity.
      loginfilter: 'cn'
   development:
     <<: *defaults
+-----------
+
+=== app/views/user_sessions.rb
+#http://techoctave.com/c7/posts/37-authlogic-and-rails-3-0-solution
+<%= form_for @user_session, :as => :user_session, :url => {:action => "create"} do |f| %>
+ <%= field_set_tag nil, :class => 'input' do %>
+
+ <% if @user_session.errors.any? %>
+	<% errors = @user_session.errors[:base] %>
+    <div id="error_explanation">
+      <h3><%= pluralize(@user_session.errors.count, "error") %> prohibited your login:</h3>
+    </div>
+  <% end %>
+
+  <ol>
+	
+	<%= f.label "ISS Username" %>
+	<%= f.text_field :ldap_login %>
+	
+	<% if Rails.env.test? || Rails.env.home? %>
+	
+	<%= f.label :password %>
+	<%= f.password_field :password %>
+
+	<% else %>
+
+	<%= f.label :password %>
+	<%= f.password_field :ldap_password %>
+
+	<% end %>
+	
+  </ol>
+ 
+<%= f.submit "Login" %>
+<% end %>
+<% end %>
+
 -----------
 
 
